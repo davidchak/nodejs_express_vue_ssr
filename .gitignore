@@ -1,0 +1,7 @@
+# JS
+node_modules
+dist
+
+# Common
+.vscode
+.git

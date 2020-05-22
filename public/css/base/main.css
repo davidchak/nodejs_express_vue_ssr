@@ -1,0 +1,25 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --padding-x: 16px;
+  --padding-y: 16px;
+  --margin-x: 20px;
+  --margin-y: 20px;
+  --color-main: #1a4876;
+  --color-text: #f8f8ff;
+  --color-block: #f3f3f3;
+  --color-error: #b32428;
+  --color-danger: #e34234;
+  --color-success: #00a86b;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
