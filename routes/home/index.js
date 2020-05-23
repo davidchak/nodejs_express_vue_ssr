@@ -12,7 +12,7 @@ const bundleRenderer = createBundleRenderer(
   }
 );
 
-router.get("*", (req, res) => {
+router.get("/", (req, res) => {
   bundleRenderer.renderToStream({ url: req.path }).pipe(res);
 });
 

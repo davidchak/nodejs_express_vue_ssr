@@ -4,16 +4,17 @@ const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 // Load the Vue SSR plugin. Don't forget this. :P
 const VueSSRPlugin = require("vue-ssr-webpack-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
   // The target should be set to "node" to avoid packaging built-ins.
   target: "node",
   // The entry should be our server entry file, not the default one.
-  entry: "./src/main.server.js",
+  entry: "./src/entry-server.js",
   output: {
     path: path.resolve(__dirname, "./dist"),
     publicPath: "/dist/",
-    filename: "build.js",
+    filename: "server.build.js",
     // Outputs node-compatible modules instead of browser-compatible.
     libraryTarget: "commonjs2",
   },
@@ -39,6 +40,10 @@ module.exports = {
           name: "[name].[ext]?[hash]",
         },
       },
+      {
+        test: /\.less$/,
+        use: ["vue-style-loader", "css-loader", "less-loader"],
+      },
     ],
   },
   resolve: {
@@ -62,6 +67,7 @@ module.exports = {
         NODE_ENV: '"production"',
       },
     }),
+    new VueLoaderPlugin(),
     // new UglifyJsPlugin({
     //   sourceMap: true,
     //   compress: {

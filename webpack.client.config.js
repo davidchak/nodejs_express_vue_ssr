@@ -1,13 +1,15 @@
 const path = require("path");
 const webpack = require("webpack");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
-  entry: "./src/main.js",
+  entry: "./src/entry-client.js",
   output: {
-    path: path.resolve(__dirname, "./dist"),
-    publicPath: "/dist/",
-    filename: "build.js",
+    path: path.resolve(__dirname, "./public/js/"),
+    publicPath: "/js/",
+    filename: "build.min.js",
   },
   module: {
     rules: [
@@ -19,7 +21,10 @@ module.exports = {
         test: /\.vue$/,
         loader: "vue-loader",
         options: {
-          loaders: {},
+          loaders: {
+            // извлечь всё содержимое тегов <docs> как обычный текст
+            // docs: ExtractTextPlugin.extract("raw-loader"),
+          },
           // other vue-loader options go here
         },
       },
@@ -27,6 +32,9 @@ module.exports = {
         test: /\.js$/,
         loader: "babel-loader",
         exclude: /node_modules/,
+        options: {
+          presets: ["@babel/preset-env"],
+        },
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -35,8 +43,17 @@ module.exports = {
           name: "[name].[ext]?[hash]",
         },
       },
+      {
+        test: /\.less$/,
+        use: ["vue-style-loader", "css-loader", "less-loader"],
+      },
     ],
   },
+  plugins: [
+    // вывести всю документацию в отдельный файл
+    // new ExtractTextPlugin("docs.md"),
+    new VueLoaderPlugin(),
+  ],
   resolve: {
     alias: {
       vue$: "vue/dist/vue.esm.js",
@@ -63,15 +80,17 @@ if (process.env.NODE_ENV === "production") {
         NODE_ENV: '"production"',
       },
     }),
-    // new UglifyJsPlugin({
-    //   sourceMap: true,
-    //   compress: {
-    //     warnings: false,
-    //   },
-    // }),
 
     new webpack.LoaderOptionsPlugin({
       minimize: true,
     }),
   ]);
+
+  module.exports.optimization = {
+    minimizer: [
+      new UglifyJsPlugin({
+        parallel: true,
+      }),
+    ],
+  };
 }
